@@ -1,1 +1,7 @@
-# MinecraftKizi
+[# MinecraftKizi](https://uni928.github.io/MinecraftKizi/)
+
+マインクラフトというゲームの記事です。
+
+個人的に思う、優秀な村人との交易を紹介しています。
+
+トラップ前提の交易は面倒なため、トラップ無しで効率的な取引について紹介しています。

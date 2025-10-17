@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>【マイクラ】村人のおすすめ取引（トラップ無し）</title>
+<meta name="description" content="マインクラフトの村人取引を、トラップなしで進めるおすすめルートを、序盤／中盤／終盤に分けて解説します。">
+<style>
+  :root{
+    --bg:#fffaf0;           /* クリーム系 */
+    --bg-soft:#fff6e5;      /* さらに淡い */
+    --card:#ffffff;
+    --ink:#2b2b2b;
+    --ink-soft:#555;
+    --accent:#e6a700;       /* ハチミツ色系アクセント */
+    --accent-2:#00a389;     /* エメラルド連想の緑 */
+    --ring:rgba(0,0,0,.08);
+    --shadow:0 12px 30px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04);
+    --radius:18px;
+  }
+  html,body{height:100%;}
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN","Hiragino Sans", Meiryo, Roboto, "Noto Sans JP", sans-serif;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #fff, transparent 60%),
+      radial-gradient(1000px 500px at 110% 0%, #fff, transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  }
+  .container{
+    max-width:1100px;
+    margin-inline:auto;
+    padding:24px 18px 72px;
+  }
+  header.hero{
+    position:relative;
+    padding:28px 20px;
+    border-radius:calc(var(--radius) * 1.2);
+    background: linear-gradient(135deg, #fff, #fff4db 60%, #fff0c2);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    border:1px solid var(--ring);
+  }
+  .title{
+    display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  }
+  .title .badge{
+    font-size:.85rem; font-weight:700;
+    padding:6px 10px; border-radius:999px;
+    background:#ffffffcc; border:1px solid var(--ring);
+    backdrop-filter:saturate(120%) blur(4px);
+  }
+  h1{
+    margin:0; font-size:clamp(1.4rem, 3vw, 2rem);
+    letter-spacing:.02em;
+  }
+  .lead{
+    margin:.75rem 0 0;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  nav.toc{
+    margin:18px 0 0;
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .toc a{
+    text-decoration:none; color:var(--ink);
+    background:#fff; border:1px solid var(--ring);
+    padding:10px 12px; border-radius:10px;
+    display:inline-flex; gap:.5ch; align-items:center;
+    transition: transform .08s ease, box-shadow .2s ease;
+  }
+  .toc a:hover{ transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.06);}
+  .grid{
+    display:grid; gap:18px; margin-top:26px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width:900px){
+    .grid{ grid-template-columns: 1.1fr .9fr; }
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--ring);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:20px;
+  }
+  .section{
+    display:grid; gap:18px;
+  }
+  h2{
+    margin:0 0 .5rem;
+    font-size:clamp(1.2rem, 2.4vw, 1.6rem);
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:.6ch;
+    font-weight:700; color:var(--accent-2);
+    background: #eafff7; border:1px solid #c8efe5;
+    padding:6px 10px; border-radius:999px; margin-bottom:6px;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:.4ch;
+    font-size:.85rem; font-weight:700;
+    color:#6b4d00; background:#fff4d1; border:1px solid #ffe39b;
+    padding:4px 8px; border-radius:999px;
+  }
+  ul{ padding-left:1.2rem; margin: .5rem 0 0;}
+  li{ margin:.25rem 0; }
+  .hint{
+    margin-top:12px; padding:12px 14px; border-radius:12px;
+    background:#f7fff1; border:1px solid #e2f5ce; color:#2d4b1f;
+  }
+  .note{
+    margin-top:12px; padding:12px 14px; border-radius:12px;
+    background:#f6f9ff; border:1px solid #dfe9ff; color:#143a7b;
+  }
+  .trade-table{
+    width:100%; border-collapse:separate; border-spacing:0;
+    overflow:hidden; border-radius:14px; border:1px solid var(--ring);
+    background:#fff;
+  }
+  .trade-table th, .trade-table td{
+    padding:12px 14px; text-align:left; vertical-align:top;
+    border-bottom:1px solid #eee;
+  }
+  .trade-table th{ background:#fff8e0; }
+  .trade-table tr:last-child td{ border-bottom:none; }
+  .flow{
+    display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;
+  }
+  .flow .step{
+    background:#fff; border:1px solid var(--ring);
+    padding:10px 12px; border-radius:12px; display:flex; gap:.6ch; align-items:center;
+  }
+  .footer{
+    margin-top:28px; text-align:center; color:var(--ink-soft);
+  }
+  .tag{font-size:.86rem; color:#666; margin-left:.3ch;}
+  .emoji{ font-size:1.15em; }
+  .callout{
+    display:flex; gap:12px; align-items:flex-start;
+    background: #fffbe8; border:1px dashed #ffdf8b; padding:14px; border-radius:14px;
+  }
+  .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        font-size:.85em; background:#f5f5f5; border:1px solid #e6e6e6; padding:2px 6px; border-radius:6px;}
+  a.inline{ color:#0b6; text-decoration-thickness:2px; text-underline-offset:2px;}
+  /* 小さなアニメ */
+  .pop{ animation: pop .35s ease-out both;}
+  @keyframes pop{ from{ transform: scale(.98); opacity:.0 } to{ transform: scale(1); opacity:1 } }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero pop" role="banner">
+      <div class="title">
+        <h1>【マイクラ】村人のおすすめの取引（トラップ無し）</h1>
+        <span class="badge">サバイバル向け</span>
+        <span class="badge">Java/Bedrock 参考</span>
+      </div>
+      <p class="lead">
+        村人取引は強力なリソース獲得手段です。経験値をサクサク稼ぎつつ、
+        <strong>エメラルド・ラピスラズリ・ダイヤモンド装備</strong>まで一気に整えられます。ここでは
+        <em>トラップなし</em>で進めるおすすめルートを、<strong>序盤 → 中盤 → 終盤</strong>の3段階で紹介します。
+      </p>
+      <nav class="toc" aria-label="ページ内ナビ">
+        <a href="#early">⛏️ 序盤</a>
+        <a href="#mid">🌾 中盤</a>
+        <a href="#late">💎 終盤</a>
+        <a href="#table">📋 早見表</a>
+        <a href="#tips">💡 コツ</a>
+      </nav>
+    </header>
+
+    <main class="grid" role="main">
+      <!-- 左カラム：本文 -->
+      <section class="section" aria-label="本文">
+        <!-- 序盤 -->
+        <article id="early" class="card pop" aria-labelledby="h-early">
+          <div class="eyebrow">序盤の主役</div>
+          <h2 id="h-early">矢師（フレッチャー）で<em>棒→エメラルド</em>量産 <span class="tag">⛏️🌲</span></h2>
+          <p>
+            木材さえあれば序盤の資金源は<strong>矢師（Fletcher）</strong>が最有力。定番は
+            <strong>棒×32 → エメラルド×1</strong>の取引です。原木1本から棒8本作れるので、
+            <strong>原木4本 ≒ エメラルド1個</strong>の感覚でどんどん換金できます。
+          </p>
+          <ul>
+            <li>弓・矢・クロスボウも入手しやすく、<strong>戦闘面を早期強化</strong>できる。</li>
+            <li>伐採→クラフトの往復だけで回るため、<strong>トラップ不要</strong>・安定供給。</li>
+          </ul>
+          <div class="hint">✅ 小ワザ：<span class="kbd">シルクタッチ不要</span>。苗木を植えて循環伐採すれば木材は尽きません。</div>
+        </article>
+
+        <!-- 中盤 -->
+        <article id="mid" class="card pop" aria-labelledby="h-mid">
+          <div class="eyebrow">中盤の稼ぎ所</div>
+          <h2 id="h-mid">農民（Farmer）で<em>カボチャ／スイカ→エメラルド</em> <span class="tag">🌾🎃🍉</span></h2>
+          <p>
+            矢師で資本を作ったら<strong>農民を育成</strong>。中盤は
+            <strong>カボチャ・スイカの売却</strong>が超効率。栽培が軌道に乗れば、<em>爆発的に稼げます</em>。
+            さらに<strong>金のニンジン</strong>は<strong>隠し満腹度</strong>が高く、最上位級の携行食に。
+          </p>
+          <ul>
+            <li>農民のレベルUPで<strong>カボチャ／スイカの買い取り</strong>が解放（段階はエディションや乱数で前後）。</li>
+            <li><strong>スノーゴーレム</strong>の素材にカボチャ（くり抜き）を使えるため汎用性◎。</li>
+            <li>エメラルドで<strong>金のニンジン</strong>を購入して食事の質を底上げ。</li>
+          </ul>
+          <div class="note">🧑‍🌾コツ：自動化なしでも、耕地＋水源＋明かり＋通路確保でストレスなく回せます。</div>
+        </article>
+
+        <!-- 終盤 -->
+        <article id="late" class="card pop" aria-labelledby="h-late">
+          <div class="eyebrow">終盤の仕上げ</div>
+          <h2 id="h-late">鍛冶系で<em>ダイヤ装備</em>＆聖職者で<em>ラピス</em> <span class="tag">💎🔧🔮</span></h2>
+          <p>
+            貯めたエメラルドは<strong>防具鍛冶（Armorer）／道具鍛冶（Toolsmith）／武器鍛冶（Weaponsmith）</strong>へ。
+            取引段階が進めば<strong>ダイヤモンド装備</strong>が揃い、エンチャントの土台が一気に整います。
+            <strong>聖職者（Cleric）</strong>からは<strong>ラピスラズリ</strong>を購入でき、エンチャント周回が快適に。
+          </p>
+          <ul>
+            <li>鍛冶系で<strong>ダイヤ装備一式</strong>を揃え、厳選はエンチャント台や本で調整。</li>
+            <li>聖職者から<strong>ラピス</strong>確保 → テーブル周回が止まらない。</li>
+            <li>余剰エメラルドは<strong>名札・グロウストーン等</strong>の快適アイテムにも投資。</li>
+          </ul>
+          <div class="callout">
+            <div class="emoji">✨</div>
+            <div><strong>まとめ：</strong>棒→農産→鍛冶＋聖職者の順で、<em>トラップ無し</em>でも高効率に装備・資材・経験値が整います。</div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 右カラム：要約・表など -->
+      <aside class="section" aria-label="サマリー">
+        <section class="card pop" aria-labelledby="h-flow">
+          <h2 id="h-flow">推奨ルートの流れ</h2>
+          <div class="flow" role="list">
+            <div class="step" role="listitem">🌲 原木 → 棒</div>
+            <div class="step" role="listitem">🏹 <strong>矢師</strong>：棒→エメ</div>
+            <div class="step" role="listitem">🌾 <strong>農民</strong>：カボチャ／スイカ→エメ</div>
+            <div class="step" role="listitem">🥕 農民：金のニンジン購入</div>
+            <div class="step" role="listitem">🔧 <strong>鍛冶</strong>：ダイヤ装備</div>
+            <div class="step" role="listitem">🔮 <strong>聖職者</strong>：ラピス購入</div>
+            <div class="step" role="listitem">✨ エンチャ周回＆強化</div>
+          </div>
+          <p class="hint">経験値は<strong>取引</strong>でも入るので、エメラルド循環＝レベル上げにも直結します。</p>
+        </section>
+
+        <section id="table" class="card pop" aria-labelledby="h-table">
+          <h2 id="h-table">取引・アイテム早見表</h2>
+          <table class="trade-table" aria-describedby="smallprint">
+            <thead>
+              <tr>
+                <th>職業</th>
+                <th>主なおすすめ取引</th>
+                <th>ポイント</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>矢師（フレッチャー）</td>
+                <td>棒×32 → エメラルド×1 / 矢・弓・クロスボウ</td>
+                <td>原木4本≒エメ1個の感覚で序盤の資金源に最適。</td>
+              </tr>
+              <tr>
+                <td>農民（Farmer）</td>
+                <td>カボチャ／スイカ → エメラルド / 金のニンジン</td>
+                <td>畑の拡張で<em>爆発的に</em>稼げる。食料の質も上がる。</td>
+              </tr>
+              <tr>
+                <td>聖職者（Cleric）</td>
+                <td>ラピスラズリ・レッドストーン 等の資材</td>
+                <td>ラピス確保でエンチャがはかどる。</td>
+              </tr>
+              <tr>
+                <td>防具鍛冶 / 道具鍛冶 / 武器鍛冶</td>
+                <td>ダイヤ防具・道具・武器（段階解放後）</td>
+                <td>終盤の装備を<strong>取引で一式</strong>整える近道。</td>
+              </tr>
+            </tbody>
+          </table>
+          <p id="smallprint" class="tag">※ 取引内容や解放段階はワールド生成やエディションで多少前後します。</p>
+        </section>
+
+        <section id="tips" class="card pop" aria-labelledby="h-tips">
+          <h2 id="h-tips">運用のコツ</h2>
+          <ul>
+            <li><span class="pill">職業ブロック管理</span>：職業ブロック（矢師＝矢細工台 等）は<em>1ブロック＝1人</em>の原則で配置し、誤就職を防止。</li>
+            <li><span class="pill">補充タイミング</span>：村人は日中の一定時間に<strong>在庫補充</strong>。取引→補充→取引のリズムを作る。</li>
+            <li><span class="pill">通路と照明</span>：トラップ無し運用では<strong>動線確保と湧きつぶし</strong>が安定の鍵。</li>
+            <li><span class="pill">エメの使い所</span>：ダイヤ装備・ラピス・名札など<strong>進行を短縮</strong>する物を優先購入。</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <section class="card pop" aria-label="締めの挨拶">
+      <h2>おわりに</h2>
+      <p>
+        以上、<strong>トラップ無し</strong>で進める村人取引のおすすめ手順でした。<br>
+        <em>棒→農産→鍛冶＋聖職者</em>の黄金ルートで、装備強化もエンチャも一気に加速します。<br>
+        楽しいクラフト＆冒険を！
+      </p>
+      <p class="footer">閲覧ありがとうございました。</p>
+    </section>
+  </div>
+
+  <script>
+    // ちょっとした使い勝手向上：ページ内リンクのスムーススクロール
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if(el){
+          e.preventDefault();
+          el.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      })
+    });
+  </script>
+</body>
+</html>

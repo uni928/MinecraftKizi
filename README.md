@@ -9,5 +9,3 @@
 [# MinecraftKizi2](https://uni928.github.io/MinecraftKizi/index2.html)
 
 モンスターが怖い場合の対処法です。
-
-戦闘や洞窟の湧き潰しなどのコツを紹介しています。

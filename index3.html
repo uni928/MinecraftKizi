@@ -91,6 +91,32 @@
     /* subtle reveal animation */
     [data-reveal]{opacity:0; transform:translateY(12px); transition: .6s ease}
     [data-reveal].visible{opacity:1; transform:none}
+
+    /* ===== モバイル専用 TOC：サイド目次を非表示、FABとシートを導入 ===== */
+    @media (max-width:980px){
+      nav.toc{ display:none; }
+      .mobile-toc-btn{
+        position: fixed; right:16px; bottom:16px; z-index: 60;
+        background: linear-gradient(120deg,var(--brand),var(--brand-2));
+        color:#001018; border:0; border-radius: 999px; padding:14px 16px;
+        font-weight:800; box-shadow: 0 10px 24px rgba(0,183,255,.25), 0 10px 24px rgba(53,224,161,.18);
+      }
+      .toc-backdrop{
+        position: fixed; inset:0; background: rgba(0,0,0,.45); z-index: 59; display:none;
+      }
+      .toc-sheet{
+        position: fixed; left:0; right:0; bottom:0; z-index: 60;
+        background: var(--panel); border-top-left-radius: 16px; border-top-right-radius: 16px;
+        box-shadow: var(--shadow); transform: translateY(100%); transition: transform .25s ease;
+        max-height: 70vh; overflow:auto; border:1px solid rgba(255,255,255,.08);
+      }
+      .toc-sheet.open{ transform: translateY(0); }
+      .toc-sheet header{ padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:space-between }
+      .toc-sheet h3{ margin:0; font-size:16px; color:var(--muted) }
+      .toc-sheet .toc-links{ padding:8px 12px }
+      .toc-sheet a{ display:block; padding:12px; border-radius:12px; color:var(--text); text-decoration:none; border:1px solid rgba(255,255,255,.06); margin:8px 0; background: rgba(255,255,255,.04) }
+      .toc-backdrop.show{ display:block; }
+    }
   </style>
 </head>
 <body>
@@ -118,30 +144,19 @@
         </div>
         <div class="hero-art" aria-hidden="true">
           <div class="isogrid">
-            <div class="cube c1"></div>
-            <div class="cube c1"></div>
-            <div class="cube c2"></div>
-            <div class="cube c3"></div>
-            <div class="cube c4"></div>
-            <div class="cube c5"></div>
-            <div class="cube c1"></div>
-            <div class="cube c2"></div>
-            <div class="cube c3"></div>
-            <div class="cube c4"></div>
-            <div class="cube c1"></div>
-            <div class="cube c2"></div>
-            <div class="cube c5"></div>
-            <div class="cube c3"></div>
-            <div class="cube c4"></div>
-            <div class="cube c1"></div>
-            <div class="cube c2"></div>
-            <div class="cube c3"></div>
+            <div class="cube c1"></div><div class="cube c1"></div><div class="cube c2"></div>
+            <div class="cube c3"></div><div class="cube c4"></div><div class="cube c5"></div>
+            <div class="cube c1"></div><div class="cube c2"></div><div class="cube c3"></div>
+            <div class="cube c4"></div><div class="cube c1"></div><div class="cube c2"></div>
+            <div class="cube c5"></div><div class="cube c3"></div><div class="cube c4"></div>
+            <div class="cube c1"></div><div class="cube c2"></div><div class="cube c3"></div>
           </div>
         </div>
       </div>
     </header>
 
     <main>
+      <!-- デスクトップ用サイド目次（モバイルではCSSで非表示） -->
       <nav class="toc">
         <h2>目次</h2>
         <a href="#first">最初に</a>
@@ -294,6 +309,17 @@
     </main>
   </div>
 
+  <!-- モバイル用：目次ボタンとスライドアップシート -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" aria-controls="mobileTocSheet" aria-expanded="false" hidden>目次</button>
+  <div class="toc-backdrop" id="tocBackdrop"></div>
+  <div class="toc-sheet" id="mobileTocSheet" aria-hidden="true">
+    <header>
+      <h3>目次</h3>
+      <button id="tocClose" class="btn secondary" style="padding:8px 10px;">閉じる</button>
+    </header>
+    <div class="toc-links" id="mobileTocLinks"><!-- JSで既存の目次から複製 --></div>
+  </div>
+
   <script>
     // smooth reveal on scroll
     const io = new IntersectionObserver((entries)=>{
@@ -310,7 +336,57 @@
         e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'});
         history.pushState(null, '', id);
       })
-    })
+    });
+
+    // ===== モバイル目次：既存nav.tocからリンクを複製してシートに流用 =====
+    const isMobile = () => window.matchMedia('(max-width: 980px)').matches;
+    const fab = document.getElementById('mobileTocBtn');
+    const sheet = document.getElementById('mobileTocSheet');
+    const linksWrap = document.getElementById('mobileTocLinks');
+    const backdrop = document.getElementById('tocBackdrop');
+    const closeBtn = document.getElementById('tocClose');
+
+    function ensureMobileToc(){
+      if(isMobile()){
+        fab.hidden = false;
+        // 目次リンクを一度だけ複製
+        if(!linksWrap.dataset.filled){
+          const desktopToc = document.querySelector('nav.toc');
+          const list = document.createElement('div');
+          desktopToc?.querySelectorAll('a[href^="#"]').forEach(a=>{
+            const clone = a.cloneNode(true);
+            clone.addEventListener('click', ()=> hideSheet());
+            list.appendChild(clone);
+          });
+          linksWrap.appendChild(list);
+          linksWrap.dataset.filled = '1';
+        }
+      }else{
+        fab.hidden = true;
+        hideSheet(true);
+      }
+    }
+
+    function showSheet(){
+      sheet.classList.add('open');
+      sheet.setAttribute('aria-hidden','false');
+      backdrop.classList.add('show');
+      fab.setAttribute('aria-expanded','true');
+    }
+    function hideSheet(force){
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden','true');
+      backdrop.classList.remove('show');
+      fab.setAttribute('aria-expanded','false');
+      if(force){ /* no-op for now */ }
+    }
+
+    fab.addEventListener('click', showSheet);
+    closeBtn.addEventListener('click', ()=> hideSheet());
+    backdrop.addEventListener('click', ()=> hideSheet());
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') hideSheet(); });
+    window.addEventListener('resize', ensureMobileToc);
+    ensureMobileToc();
   </script>
 </body>
 </html>

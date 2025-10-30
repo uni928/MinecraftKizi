@@ -9,3 +9,9 @@
 [# MinecraftKizi2](https://uni928.github.io/MinecraftKizi/index2.html)
 
 モンスターが怖い場合の対処法です。
+
+[# MinecraftKizi3](https://uni928.github.io/MinecraftKizi/index3.html)
+
+ブランチマイニングより、村人との取引の方が優れている点を挙げています。
+
+ブランチマイニングは楽しみ方の一つなので、たまにやるのは大切です。

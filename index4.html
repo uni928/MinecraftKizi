@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minecraft 記事ポータル｜3本への入口</title>
+  <meta name="description" content="サバイバル向けの3記事：村人取引（トラップ無し）、モンスター対策、ブランチマイニングより村人取引が強い理由。綺麗なUIで読みやすく案内。" />
+  <meta name="color-scheme" content="light dark">
+  <style>
+    :root{
+      --bg: #0c0f13; --panel:#121720; --text:#e9f2ff; --muted:#8ca1b8; --line: rgba(255,255,255,.08);
+      --brand:#3ee4a6; --brand2:#00b1ff; --accent:#b388ff; --warn:#f59e0b; --ok:#22c55e; --bad:#ef4444;
+      --radius:20px; --rsm:14px; --shadow: 0 12px 28px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8fb; --panel:#ffffff; --text:#0b1020; --muted:#566b83; --line: rgba(0,0,0,.08); --shadow: 0 10px 24px rgba(0,18,46,.08); }
+    }
+    [data-theme="light"]{ --bg:#f6f8fb; --panel:#ffffff; --text:#0b1020; --muted:#566b83; --line: rgba(0,0,0,.08); }
+    [data-theme="dark"]{ --bg:#0c0f13; --panel:#121720; --text:#e9f2ff; --muted:#8ca1b8; --line: rgba(255,255,255,.08); }
+
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "Noto Sans JP", Meiryo, sans-serif;
+      color:var(--text); background:
+        radial-gradient(1200px 700px at 80% -80%, rgba(0,177,255,.16), transparent 60%),
+        radial-gradient(1000px 600px at -10% 120%, rgba(62,228,166,.16), transparent 60%), var(--bg);
+      line-height:1.75; letter-spacing:.02em;
+    }
+    a{color:var(--brand2); text-decoration-thickness:2px; text-underline-offset:2px}
+    .wrap{max-width:1180px; margin:0 auto; padding:24px}
+
+    /* HERO */
+    .hero{position:relative; overflow:clip; border-radius: var(--radius); background: linear-gradient(155deg, rgba(0,177,255,.18), rgba(62,228,166,.18) 45%, transparent 90%), var(--panel); box-shadow: var(--shadow);}
+    .hero-inner{display:grid; grid-template-columns:1.1fr .9fr; gap:22px; padding:42px 26px 54px}
+    @media (max-width:960px){ .hero-inner{grid-template-columns:1fr} }
+    h1{font-size: clamp(28px, 4vw, 48px); line-height:1.12; margin:0 0 10px}
+    .lead{color:var(--muted); font-size: clamp(15px, 2vw, 18px)}
+    .badges{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid var(--line)}
+    .badge svg{width:18px; height:18px}
+    .cta{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+    .btn{--bg:linear-gradient(120deg,var(--brand),var(--brand2)); --fg:#001018; background:var(--bg); color:var(--fg); border:0; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; box-shadow: 0 10px 24px rgba(0,177,255,.25), 0 10px 24px rgba(62,228,166,.18)}
+    .btn.secondary{background:transparent; color:var(--text); border:1px solid var(--line)}
+
+    /* Controls */
+    .controls{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:12px}
+    .seg{display:inline-flex; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; overflow:hidden}
+    .seg button{padding:8px 12px; border:0; background:transparent; color:var(--text); cursor:pointer}
+    .seg button[aria-pressed="true"]{background:linear-gradient(120deg, rgba(62,228,166,.25), rgba(0,177,255,.25)); font-weight:700}
+    .select{padding:10px 12px; background:var(--panel); border:1px solid var(--line); border-radius:12px; color:var(--text)}
+
+    /* Grid */
+    main{margin-top:24px}
+    .grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:18px}
+    @media (max-width:1000px){ .grid{grid-template-columns:repeat(2, 1fr)} }
+    @media (max-width:680px){ .grid{grid-template-columns:1fr} }
+    .card{position:relative; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow: var(--shadow); overflow:hidden}
+    .thumb{aspect-ratio: 16/9; background: linear-gradient(140deg, rgba(0,177,255,.16), rgba(62,228,166,.16)); display:grid; place-items:center}
+    .thumb .icon{width:64px; height:64px; opacity:.9}
+    .body{padding:18px}
+    .title{font-size:20px; font-weight:800; margin:0 0 6px}
+    .desc{color:var(--muted)}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin:12px 0}
+    .chip{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.05)}
+    .actions{display:flex; gap:10px; align-items:center; justify-content:space-between; margin-top:12px}
+    .actions .left{display:flex; gap:10px; align-items:center}
+    .icon-btn{display:inline-flex; gap:8px; align-items:center; padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text); text-decoration:none}
+    .icon-btn svg{width:18px; height:18px}
+
+    .pin{position:absolute; top:10px; right:10px; background:rgba(0,0,0,.25); border:1px solid var(--line); backdrop-filter: blur(6px); border-radius:10px; padding:6px 8px; display:flex; align-items:center; gap:6px; cursor:pointer}
+    .pin[aria-pressed="true"]{background:linear-gradient(120deg, rgba(62,228,166,.25), rgba(0,177,255,.25));}
+
+    /* Resume banner */
+    .resume{margin-top:18px; padding:14px 16px; background:linear-gradient(120deg, rgba(62,228,166,.12), rgba(0,177,255,.12)); border:1px solid var(--line); border-radius:14px; display:flex; align-items:center; gap:12px}
+
+    footer{opacity:.8; margin:34px 0 12px; text-align:center; font-size:14px}
+    .muted{color:var(--muted)}
+
+    /* reveal */
+    [data-reveal]{opacity:0; transform: translateY(12px); transition:.6s ease}
+    [data-reveal].visible{opacity:1; transform:none}
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <header class="hero" data-reveal>
+      <div class="hero-inner">
+        <div>
+          <h1>はじめに：<span style="background:linear-gradient(120deg,var(--brand),var(--brand2)); -webkit-background-clip:text; background-clip:text; color:transparent">Minecraft 記事ポータル</span></h1>
+          <p class="lead">これまでに作成した<strong>3本の解説記事</strong>への入口です。<br>読みたい記事をピン留め、テーマ（ライト／ダーク／自動）や並び順を設定できます。設定やメモは<strong>リアルタイムで IndexedDB に保存</strong>され、次回も同じ状態から再開できます。</p>
+          <div class="badges">
+            <span class="badge" title="サバイバル向け">🧭 サバイバル向け</span>
+            <span class="badge" title="Java/Bedrock 参考">🧱 Java/Bedrock 参考</span>
+            <span class="badge" title="トラップ無し構成">🧰 トラップ無し</span>
+          </div>
+          <div class="controls" role="group" aria-label="表示オプション">
+            <label for="theme" class="muted">テーマ</label>
+            <select id="theme" class="select" aria-label="テーマ切替">
+              <option value="auto">自動（OSに合わせる）</option>
+              <option value="light">ライト</option>
+              <option value="dark">ダーク</option>
+            </select>
+            <label for="sort" class="muted">並び順</label>
+            <select id="sort" class="select" aria-label="並び順">
+              <option value="recommended">おすすめ</option>
+              <option value="pinned">ピンを先頭</option>
+              <option value="recent">最近開いた順</option>
+              <option value="clicks">よく開く順</option>
+            </select>
+            <button id="reset" class="btn secondary" type="button">保存データをリセット</button>
+          </div>
+          <div id="resume" class="resume" hidden>
+            <span>⏱️ 前回の続き：</span>
+            <a id="resumeLink" class="icon-btn" href="#">記事を開く</a>
+            <span id="resumeWhen" class="muted"></span>
+          </div>
+          <div class="cta">
+            <a class="btn" href="#list">記事一覧へスクロール</a>
+          </div>
+        </div>
+        <div aria-hidden="true">
+          <div class="thumb" style="border-radius:16px;">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+              <rect x="3" y="3" width="18" height="18" rx="4"/>
+              <path d="M7 10h10M7 14h6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="list">
+      <section class="grid" data-reveal>
+        <!-- Card 1 -->
+        <article class="card" data-id="trade" data-clicks="0">
+          <button class="pin" aria-label="ピン留め" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18"><path d="M5 7l7-4 7 4-7 4-7-4Z"/><path d="M12 11v10"/></svg>ピン</button>
+          <div class="thumb"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M12 3v18"/></svg></div>
+          <div class="body">
+            <h2 class="title">【マイクラ】村人のおすすめの取引（トラップ無し）</h2>
+            <p class="desc">サバイバル向け / Java・Bedrock 参考。トラップ無しで進めるおすすめルートを、<strong>序盤→中盤→終盤</strong>の3段階で解説。</p>
+            <div class="chips"><span class="chip">サバイバル</span><span class="chip">トラップ無し</span><span class="chip">ルート解説</span></div>
+            <div class="actions">
+              <div class="left">
+                <a class="icon-btn open" href="https://uni928.github.io/MinecraftKizi/" target="_blank" rel="noopener" data-link>読む</a>
+                <button class="icon-btn memo-btn" type="button">メモ</button>
+              </div>
+              <span class="muted last-open" aria-live="polite"></span>
+            </div>
+            <textarea class="memo" placeholder="この記事の個人メモ（自動保存）" hidden></textarea>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card" data-id="fear" data-clicks="0">
+          <button class="pin" aria-label="ピン留め" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18"><path d="M5 7l7-4 7 4-7 4-7-4Z"/><path d="M12 11v10"/></svg>ピン</button>
+          <div class="thumb"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8 16c1.5-1 6.5-1 8 0"/></svg></div>
+          <div class="body">
+            <h2 class="title">【マイクラ】モンスターが怖い場合の対策方法</h2>
+            <p class="desc">「うめき声や奇襲が怖い」「夜が不安」──そんな人に向けて、<strong>序盤でもできる具体策</strong>をやさしく解説。</p>
+            <div class="chips"><span class="chip">安全攻略</span><span class="chip">序盤向け</span><span class="chip">安心設計</span></div>
+            <div class="actions">
+              <div class="left">
+                <a class="icon-btn open" href="https://uni928.github.io/MinecraftKizi/index2.html" target="_blank" rel="noopener" data-link>読む</a>
+                <button class="icon-btn memo-btn" type="button">メモ</button>
+              </div>
+              <span class="muted last-open" aria-live="polite"></span>
+            </div>
+            <textarea class="memo" placeholder="この記事の個人メモ（自動保存）" hidden></textarea>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card" data-id="vs-branch" data-clicks="0">
+          <button class="pin" aria-label="ピン留め" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18"><path d="M5 7l7-4 7 4-7 4-7-4Z"/><path d="M12 11v10"/></svg>ピン</button>
+          <div class="thumb"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19V5l8-3 8 3v14l-8 3-8-3Z"/><path d="M8 9h8M8 13h8"/></svg></div>
+          <div class="body">
+            <h2 class="title">【マイクラ】ブランチマイニングより 村人取引 の方が強い理由</h2>
+            <p class="desc">エメラルド経済×村人育成で装備・経験値・素材を一気に強化。<strong>スマホ勢の小技</strong>も紹介。</p>
+            <div class="chips"><span class="chip">エメ効率</span><span class="chip">村人育成</span><span class="chip">スマホTips</span></div>
+            <div class="actions">
+              <div class="left">
+                <a class="icon-btn open" href="https://uni928.github.io/MinecraftKizi/index3.html" target="_blank" rel="noopener" data-link>読む</a>
+                <button class="icon-btn memo-btn" type="button">メモ</button>
+              </div>
+              <span class="muted last-open" aria-live="polite"></span>
+            </div>
+            <textarea class="memo" placeholder="この記事の個人メモ（自動保存）" hidden></textarea>
+          </div>
+        </article>
+      </section>
+
+      <section class="resume" id="tips" data-reveal>
+        <div>💡 小ワザ：カード右上の「ピン」を押すと、<strong>ピン留めした記事が先頭</strong>に並びます。並び順は上のセレクタから変更可能です。</div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2025 – Minecraft fan tips hub. 本ページは非公式ファンコンテンツです。</p>
+    </footer>
+  </div>
+
+  <script>
+    // IndexedDB: simple key-value store
+    const DB_NAME = 'mc_hub';
+    const STORE = 'kv';
+    const VERSION = 1;
+    const defaultState = {
+      theme: 'auto',
+      sort: 'recommended',
+      pinned: [],        // ['trade','fear','vs-branch']
+      notes: {},         // {id: 'text'}
+      clicks: {},        // {id: number}
+      lastOpened: null,  // 'id'
+      lastOpenedAt: null // timestamp
+    };
+
+    let db;
+    function openDB(){
+      return new Promise((resolve, reject)=>{
+        const req = indexedDB.open(DB_NAME, VERSION);
+        req.onupgradeneeded = (e)=>{
+          const db = e.target.result;
+          if(!db.objectStoreNames.contains(STORE)){
+            db.createObjectStore(STORE, { keyPath: 'key' });
+          }
+        };
+        req.onsuccess = ()=> resolve(req.result);
+        req.onerror = ()=> reject(req.error);
+      });
+    }
+    async function getItem(key){
+      db = db || await openDB();
+      return new Promise((resolve, reject)=>{
+        const tx = db.transaction(STORE,'readonly');
+        const st = tx.objectStore(STORE);
+        const req = st.get(key);
+        req.onsuccess = ()=> resolve(req.result?.value);
+        req.onerror = ()=> reject(req.error);
+      });
+    }
+    async function setItem(key, value){
+      db = db || await openDB();
+      return new Promise((resolve, reject)=>{
+        const tx = db.transaction(STORE,'readwrite');
+        const st = tx.objectStore(STORE);
+        st.put({ key, value });
+        tx.oncomplete = ()=> resolve();
+        tx.onerror = ()=> reject(tx.error);
+      });
+    }
+    async function clearAll(){
+      db = db || await openDB();
+      return new Promise((resolve, reject)=>{
+        const tx = db.transaction(STORE,'readwrite');
+        tx.objectStore(STORE).clear();
+        tx.oncomplete = ()=> resolve();
+        tx.onerror = ()=> reject(tx.error);
+      });
+    }
+
+    // State helpers
+    const STATE_KEY = 'prefs';
+    let state = structuredClone(defaultState);
+
+    const save = (()=>{
+      let t; return ()=>{ clearTimeout(t); t = setTimeout(()=> setItem(STATE_KEY, state), 120); };
+    })();
+
+    function applyTheme(){
+      document.documentElement.removeAttribute('data-theme');
+      if(state.theme === 'light') document.documentElement.setAttribute('data-theme','light');
+      if(state.theme === 'dark') document.documentElement.setAttribute('data-theme','dark');
+    }
+
+    function fmtTime(ts){
+      const d = new Date(ts);
+      const pad = (n)=> (''+n).padStart(2,'0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function updateResumeBanner(){
+      const wrap = document.getElementById('resume');
+      if(state.lastOpened){
+        wrap.hidden = false;
+        const id = state.lastOpened;
+        const link = document.querySelector(`article[data-id="${id}"] a[data-link]`);
+        const resumeLink = document.getElementById('resumeLink');
+        resumeLink.href = link.href; resumeLink.target = link.target; resumeLink.rel = link.rel;
+        resumeLink.textContent = document.querySelector(`article[data-id="${id}"] .title`).textContent;
+        document.getElementById('resumeWhen').textContent = `（${fmtTime(state.lastOpenedAt)}）`;
+      }else{
+        wrap.hidden = true;
+      }
+    }
+
+    function renderLastOpenLabels(){
+      document.querySelectorAll('article.card').forEach(card=>{
+        const id = card.dataset.id;
+        const el = card.querySelector('.last-open');
+        const clicks = state.clicks?.[id]||0;
+        const last = state.lastOpened === id ? state.lastOpenedAt : null;
+        el.textContent = clicks ? `開いた回数: ${clicks}${last? ` / 最終: ${fmtTime(last)}`:''}` : '';
+      });
+    }
+
+    function sortCards(){
+      const grid = document.querySelector('.grid');
+      const cards = Array.from(grid.children);
+      const now = Date.now();
+      const score = (card)=>{
+        const id = card.dataset.id;
+        const pinned = state.pinned.includes(id) ? 1000 : 0;
+        const clicks = state.clicks?.[id]||0;
+        const recent = (state.lastOpened===id) ? 500 : 0;
+        return pinned + clicks*10 + recent;
+      };
+      let sorted = cards;
+      switch(state.sort){
+        case 'pinned':
+          sorted = cards.sort((a,b)=> (state.pinned.includes(b.dataset.id) - state.pinned.includes(a.dataset.id)) );
+          break;
+        case 'recent':
+          sorted = cards.sort((a,b)=> ( (state.lastOpened===b.dataset.id) - (state.lastOpened===a.dataset.id) ));
+          break;
+        case 'clicks':
+          sorted = cards.sort((a,b)=> ( (state.clicks?.[b.dataset.id]||0) - (state.clicks?.[a.dataset.id]||0) ));
+          break;
+        default: // recommended: composite score
+          sorted = cards.sort((a,b)=> score(b)-score(a));
+      }
+      sorted.forEach(c=> grid.appendChild(c));
+    }
+
+    function bindCard(card){
+      const id = card.dataset.id;
+      const pinBtn = card.querySelector('.pin');
+      const openLink = card.querySelector('a.open');
+      const memoBtn = card.querySelector('.memo-btn');
+      const memo = card.querySelector('.memo');
+
+      // Pin toggle
+      const setPinVisual = ()=> pinBtn.setAttribute('aria-pressed', String(state.pinned.includes(id)) );
+      pinBtn.addEventListener('click', ()=>{
+        const idx = state.pinned.indexOf(id);
+        if(idx===-1) state.pinned.push(id); else state.pinned.splice(idx,1);
+        setPinVisual(); save(); sortCards();
+      });
+      setPinVisual();
+
+      // Open tracking
+      openLink.addEventListener('click', ()=>{
+        state.lastOpened = id; state.lastOpenedAt = Date.now();
+        state.clicks[id] = (state.clicks[id]||0)+1;
+        save(); updateResumeBanner(); renderLastOpenLabels(); sortCards();
+      });
+
+      // Memo toggle + autosave
+      memoBtn.addEventListener('click', ()=>{
+        memo.hidden = !memo.hidden; if(!memo.hidden) memo.focus();
+      });
+      memo.value = state.notes?.[id]||'';
+      memo.addEventListener('input', ()=>{ state.notes[id] = memo.value; save(); });
+    }
+
+    // INIT
+    (async function(){
+      const saved = await getItem(STATE_KEY);
+      state = Object.assign({}, defaultState, saved||{});
+
+      // Controls
+      const themeSel = document.getElementById('theme');
+      const sortSel = document.getElementById('sort');
+      const resetBtn = document.getElementById('reset');
+      themeSel.value = state.theme; sortSel.value = state.sort;
+      themeSel.addEventListener('change', ()=>{ state.theme = themeSel.value; applyTheme(); save(); });
+      sortSel.addEventListener('change', ()=>{ state.sort = sortSel.value; sortCards(); save(); });
+      resetBtn.addEventListener('click', async()=>{ await clearAll(); state = structuredClone(defaultState); themeSel.value=state.theme; sortSel.value=state.sort; applyTheme(); updateResumeBanner(); renderLastOpenLabels(); sortCards(); document.querySelectorAll('.memo').forEach(m=> m.value=''); document.querySelectorAll('.pin').forEach(p=> p.setAttribute('aria-pressed','false')); });
+
+      applyTheme();
+
+      // Cards
+      document.querySelectorAll('article.card').forEach(bindCard);
+
+      // Restore pin visuals
+      state.pinned.forEach(id=>{
+        const pin = document.querySelector(`article[data-id="${id}"] .pin`);
+        if(pin) pin.setAttribute('aria-pressed','true');
+      });
+
+      updateResumeBanner();
+      renderLastOpenLabels();
+      sortCards();
+
+      // Reveal animations
+      const io = new IntersectionObserver((entries)=>{
+        for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }}
+      }, {threshold:.12});
+      document.querySelectorAll('[data-reveal]').forEach(el=> io.observe(el));
+    })();
+  </script>
+</body>
+</html>

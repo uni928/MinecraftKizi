@@ -1,5 +1,9 @@
 マインクラフトというゲームの記事です。
 
+[# 各記事への導線](https://uni928.github.io/MinecraftKizi/index4.html)
+
+このサイトから各記事に飛ぶことができます。
+
 [# MinecraftKizi](https://uni928.github.io/MinecraftKizi/)
 
 個人的に思う、優秀な村人との交易を紹介しています。
